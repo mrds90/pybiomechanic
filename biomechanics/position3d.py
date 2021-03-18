@@ -85,7 +85,7 @@ class JointCenter(Point3D):
 
     def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
         return unitary_vector(marker2.position-marker1.position)
-    def second_vector(self,marker1,marker2,marker3,sign=1): #second to estimate, dosent mean that is v
+    def second_vector(self,marker1,marker2,marker3,sign=1): #second to estimate, dosent mean that is v,
         auxiliar1=marker1.position-marker3.position
         auxiliar2=marker2.position-marker3.__position
         vector=None
