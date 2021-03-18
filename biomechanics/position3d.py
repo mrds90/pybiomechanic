@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import signal
 from biomechanics import Segment
+from vectors import Vector
 
 
 class Point3D:
@@ -82,7 +83,7 @@ class JointCenter(Point3D):
         Point3D.__init__(self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],marker3,coefU,coefV,coefW),label,marker1.fs)
 
     def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
-        return unitary_vector(marker2.position-marker1.position)
+        return Vector.unitary_vector(marker2.position-marker1.position)
     def second_vector(self,marker1,marker2,marker3,sign=1): #second to estimate, dosent mean that is v,
         auxiliar1=marker1.position-marker3.position
         auxiliar2=marker2.position-marker3.__position
@@ -92,7 +93,7 @@ class JointCenter(Point3D):
         elif auxiliar1.shape[1]==3 and auxiliar2.shape[1]==3:
             vector=np.cross(auxiliar1,auxiliar2,axis=0)
         if vector !=None:
-            return sign*unitary_vector(vector)
+            return sign*Vector.unitary_vector(vector)
     def third_vector(self): #third to estimate, dosent mean that is w
         if self.__vectors[0]==None:
             if self.__vectors[1].shape[0]==3 and self.__vectors[2].shape[0]==3:
@@ -111,15 +112,5 @@ class JointCenter(Point3D):
                 return np.cross(self.__vectors[0],self.__vectors[1],axis=0)
     def __set_position(self,u,v,w,origin,coefU:float,coefV:float,coefW:float):
         return origin+coefU*u+coefV*v+coefW*w
-
-    
-def module(vector:np.array):
-    if vector.shape[0]==3:
-        return np.sqrt((vector*vector).sum(axis=1))
-    elif vector.shape[1]==3:
-        return np.sqrt((vector*vector).sum(axis=0))
-def unitary_vector(vector:np.array):
-    module=module(vector) #get module of the vector
-    return np.divide(vector,np.transpose([module,module,module])) # wise element division with moudule
 
 
