@@ -5,6 +5,7 @@ class Vector:
     def __init__(self,x=0,y=0,z=0):
         self.__orientatation=np.array([[x],[y],[z]])
         self.__orientatation.transpose()
+        self.__module=Vector.module(self.__orientatation)
     @property
     def orientatation(self):
         return self.__orientatation
@@ -36,10 +37,10 @@ class Vector:
             print('ERROR: wrong type or shape')
     @classmethod
     def module(cls,vector:np.array):
-    if vector.shape[0]==3:
-        return np.sqrt((vector*vector).sum(axis=1))
-    elif vector.shape[1]==3:
-        return np.sqrt((vector*vector).sum(axis=0))
+        if vector.shape[0]==3:
+            return np.sqrt((vector*vector).sum(axis=1))
+        elif vector.shape[1]==3:
+            return np.sqrt((vector*vector).sum(axis=0))
     @classmethod
     def unitary_vector(cls,vector:np.array):
         module=module(vector) #get module of the vector
