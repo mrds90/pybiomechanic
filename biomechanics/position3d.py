@@ -67,7 +67,6 @@ class Point3D:
 class Marker (Point3D):
     def __init__(self,position:np.array,label:str,samplingFrecuency:int,segment:Segment):
         Point3D.__init__(self,position,label,samplingFrecuency)
-        self.__segment=segment
 
 class CenterOfMass(Point3D):
     def __init__(self,proximal:np.array,distal:np.array,proportionalProximalDistance:float,label:str,samplingFrecuency:int):
@@ -80,8 +79,7 @@ class JointCenter(Point3D):
         self.__vectors[order[0]-1]=self.first_vector(marker1,marker2)
         self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3)
         self.__vectors[order[2]-1]=self.third_vector()
-        self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],marker3,coefU,coefV,coefW)
-        Point3D.__init__(self.__position,label,marker1.fs)
+        Point3D.__init__(self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],marker3,coefU,coefV,coefW),label,marker1.fs)
 
     def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
         return unitary_vector(marker2.position-marker1.position)
@@ -111,8 +109,10 @@ class JointCenter(Point3D):
                 return np.cross(self.__vectors[0],self.__vectors[1],axis=1)
             if self.__vectors[0].shape[1]==3 and self.__vectors[1].shape[1]==3:
                 return np.cross(self.__vectors[0],self.__vectors[1],axis=0)
-    def __set_position(self,u,v,w,origin,coefU:float,coefV:float,coefW:float)
-        self.__position=origin+coefU*u+coefV*v+coefW*w
+    def __set_position(self,u,v,w,origin,coefU:float,coefV:float,coefW:float):
+        return origin+coefU*u+coefV*v+coefW*w
+
+    
 def module(vector:np.array):
     if vector.shape[0]==3:
         return np.sqrt((vector*vector).sum(axis=1))
