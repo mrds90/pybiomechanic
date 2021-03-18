@@ -74,42 +74,31 @@ class CenterOfMass(Point3D):
         self.__position=proximal+(distal-proximal)*proportionalProximalDistance
         Point3D.__init__(self,self.__position,label,samplingFrecuency)
 
-class JointCenter(Point3D):
+class JointCenter(Point3D): #check how to set the sign
     def __init__(self,label:str,marker1:Marker,marker2:Marker,marker3:Marker,order=[1,2,3],coefU:float,coefV:float,coefW:float): #order is 1=u, 2=v and 3=w
         self.__vectors=[None, None, None]
         self.__vectors[order[0]-1]=self.first_vector(marker1,marker2)
         self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3)
         self.__vectors[order[2]-1]=self.third_vector()
         Point3D.__init__(self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],marker3,coefU,coefV,coefW),label,marker1.fs)
-
     def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
-        return Vector.unitary_vector(marker2.position-marker1.position)
+        vector=marker2.position-marker1.position
+        return Vector.unitary_vector(Vector.new_vector_from_np_array(vector))
     def second_vector(self,marker1,marker2,marker3,sign=1): #second to estimate, dosent mean that is v,
-        auxiliar1=marker1.position-marker3.position
-        auxiliar2=marker2.position-marker3.__position
+        vector1=marker1.position-marker3.position
+        vector1=Vector.new_vector_from_np_array(vector1)
+        vector2=marker2.position-marker3.__position
+        vector2=Vector.new_vector_from_np_array(vector2)
         vector=None
-        if auxiliar1.shape[0]==3 and auxiliar2.shape[0]==3:
-            vector=np.cross(auxiliar1,auxiliar2,axis=1)
-        elif auxiliar1.shape[1]==3 and auxiliar2.shape[1]==3:
-            vector=np.cross(auxiliar1,auxiliar2,axis=0)
-        if vector !=None:
-            return sign*Vector.unitary_vector(vector)
-    def third_vector(self): #third to estimate, dosent mean that is w
+        return sign*Vector.unitary_vector(Vector.perpendicular_vector(vector1,vector2,sign))
+    def third_vector(self,sign=1): #third to estimate, dosent mean that is w
         if self.__vectors[0]==None:
-            if self.__vectors[1].shape[0]==3 and self.__vectors[2].shape[0]==3:
-                return np.cross(self.__vectors[1],self.__vectors[2],axis=1)
-            if self.__vectors[1].shape[1]==3 and self.__vectors[2].shape[1]==3:
-                return np.cross(self.__vectors[1],self.__vectors[2],axis=0)
+            return Vector.perpendicular_vector(self.__vectors[1],self.__vectors[2],sign)
         if self.__vectors[1]==None:
-            if self.__vectors[0].shape[0]==3 and self.__vectors[2].shape[0]==3:
-                return np.cross(self.__vectors[2],self.__vectors[0],axis=1)
-            if self.__vectors[0].shape[1]==3 and self.__vectors[2].shape[1]==3:
-                return np.cross(self.__vectors[2],self.__vectors[0],axis=0)
+            return Vector.perpendicular_vector(self.__vectors[2],self.__vectors[0],sign)
         if self.__vectors[2]==None:
-            if self.__vectors[0].shape[0]==3 and self.__vectors[1].shape[0]==3:
-                return np.cross(self.__vectors[0],self.__vectors[1],axis=1)
-            if self.__vectors[0].shape[1]==3 and self.__vectors[1].shape[1]==3:
-                return np.cross(self.__vectors[0],self.__vectors[1],axis=0)
+            return Vector.perpendicular_vector(self.__vectors[0],self.__vectors[1],sign)
+
     def __set_position(self,u,v,w,origin,coefU:float,coefV:float,coefW:float):
         return origin+coefU*u+coefV*v+coefW*w
 

@@ -87,6 +87,10 @@ class Pelvis(Segment):
         Segment.__init__('Pelvis',Segment.set_mass(-7.498,0.0976,0.04896,body=body),Segment.set_inertia(-775, 14.7, 1.685,-1568 ,12 ,7.741,-934,11.8,3.44,body=body),{'pelvisWidth':pelvisWidth},body)
     def set_markers (sacrum, asisR, asisL):
         Segment.set_markers(sacrum, asisR, asisL)
+    def calculate_joint_center(self):
+        pass  
+
+
     def calculate_local_system():
         pass
     
