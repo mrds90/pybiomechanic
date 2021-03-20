@@ -18,7 +18,7 @@ class Segment:
         self.__mass=mass
         self.__inertia=inertia
         self.__anthropometric=anthropometric
-        self.__jointCenter=[]
+        self.__jointCenter:dict
         self.__centerOfMass:pos3d.CenterOfMass
         self.__body=body
         self.__markers=[]
@@ -28,7 +28,7 @@ class Segment:
             self.__markers.append(marker)
     def calculate_joint_center():
         pass #define for each kind of segment
-    def set_joint_center(self,proximalJointCenter:pos3d.JointCenter, distalJointCenter:pos3d.JointCenter):
+    def set_joint_center(self,proximalJointCenter:pos3d.JointCenter, distalJointCenter:pos3d.JointCenter): #pelvis case the order is rigth and left hip
         self.__jointCenter=[proximalJointCenter,distalJointCenter]
     def set_mass(self, b0:float, b1:float, b2:float,body=self.__body):
         self.__mass=b0+b1*body.mass+b2*body.height
@@ -81,16 +81,27 @@ class Segment:
     @property
     def markers(self):
         return self.__markers
+    @property
+    def anthropometric(self):
+        return self.__anthropometric
+    @property
+    def jointCenter(self):
+        return self.__jointCenter
 
 class Pelvis(Segment):
     def __init__(self,body:body,pelvisWidth:float): #pelvisWidth in meters
         Segment.__init__('Pelvis',Segment.set_mass(-7.498,0.0976,0.04896,body=body),Segment.set_inertia(-775, 14.7, 1.685,-1568 ,12 ,7.741,-934,11.8,3.44,body=body),{'pelvisWidth':pelvisWidth},body)
+        self.__hip_r:pos3d:JointCenter
+        self.__hip_l:pos3d:JointCenter
     def set_markers (sacrum, asisR, asisL):
         Segment.set_markers(sacrum, asisR, asisL)
-    def calculate_joint_center(self):
-        pass  
-
-
+    def set_joint_center(self):
+        coefU=self.anthropometric['pelvisWidth']*0.598
+        coefV=self.anthropometric['pelvisWidth']*0.344
+        coefW=-self.anthropometric['pelvisWidth']*0.29
+        hip_r=pos3d.JointCenter('hip_r',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=-coefV,coefW=coefW)
+        hip_l=pos3d.JointCenter('hip_l',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=coefW) 
+        Segment.set_joint_center(hip_r,hip_l)
     def calculate_local_system():
         pass
     

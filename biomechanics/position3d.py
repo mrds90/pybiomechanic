@@ -74,12 +74,12 @@ class CenterOfMass(Point3D):
         self.__position=proximal+(distal-proximal)*proportionalProximalDistance
         Point3D.__init__(self,self.__position,label,samplingFrecuency)
 
-class JointCenter(Point3D): #check how to set the sign
-    def __init__(self,label:str,marker1:Marker,marker2:Marker,marker3:Marker,order=[1,2,3],coefU:float,coefV:float,coefW:float): #order is 1=u, 2=v and 3=w
+class JointCenter(Point3D): 
+    def __init__(self,label:str,marker1:Marker,marker2:Marker,marker3:Marker,order=[1,2,3],coefU:float,coefV:float,coefW:float,sign2=1,sign3=1): #order is 1=u, 2=v and 3=w
         self.__vectors=[None, None, None]
         self.__vectors[order[0]-1]=self.first_vector(marker1,marker2)
-        self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3)
-        self.__vectors[order[2]-1]=self.third_vector()
+        self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3,sign2)
+        self.__vectors[order[2]-1]=self.third_vector(sign3)
         Point3D.__init__(self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],marker3,coefU,coefV,coefW),label,marker1.fs)
     def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
         vector=marker2.position-marker1.position
