@@ -1,7 +1,7 @@
 import numpy as np
-import position3d as pos3d
+from biomechanics import *
 
-class body:
+class Body:
     def __init__(self,mass:float,height):
         self.__mass=mass #must be in kilograms
         self.__height=height #must be in centimeters
@@ -13,22 +13,23 @@ class body:
         return self.__height
 
 class Segment:
-    def __init__(self,label:str,mass:float,inertia:np.array,anthropometric:dict,body:body):
+    def __init__(self,label:str,mass:float,inertia:np.array,anthropometric:dict,body:Body):
         self.__label=label
         self.__mass=mass
         self.__inertia=inertia
         self.__anthropometric=anthropometric
         self.__jointCenter:dict
-        self.__centerOfMass:pos3d.CenterOfMass
+        self.__centerOfMass:CenterOfMass
         self.__body=body
         self.__markers=[]
+        self.__orientatation={}
     def set_markers(*markers):
         # try method to verify Marker Objet type is missing
         for marker in markers:
             self.__markers.append(marker)
     def calculate_joint_center():
         pass #define for each kind of segment
-    def set_joint_center(self,proximalJointCenter:pos3d.JointCenter, distalJointCenter:pos3d.JointCenter): #pelvis case the order is rigth and left hip
+    def set_joint_center(self,proximalJointCenter:JointCenter, distalJointCenter:JointCenter): #pelvis case the order is rigth and left hip
         self.__jointCenter=[proximalJointCenter,distalJointCenter]
     def set_mass(self, b0:float, b1:float, b2:float,body=self.__body):
         self.__mass=b0+b1*body.mass+b2*body.height
@@ -40,7 +41,7 @@ class Segment:
     def set_center_of_mass(self,proportionalProximalDistance:float):
         try:
             if len(self.__jointCenter==2 and type(proportionalProximalDistance) is float):
-                self.__centerOfMass=pos3d.CenterOfMass(self.__jointCenter[0].position,self.__jointCenter[1].position,proportionalProximalDistance,self.__label,self.__jointCenter[0].fs)
+                self.__centerOfMass=CenterOfMass(self.__jointCenter[0].position,self.__jointCenter[1].position,proportionalProximalDistance,self.__label,self.__jointCenter[0].fs)
             else:
                 raise ValueError
         except ValueError:
@@ -87,23 +88,40 @@ class Segment:
     @property
     def jointCenter(self):
         return self.__jointCenter
+    @property
+    def orientatation(self):
+        return self.__orientatation
+    @inertia.setter
+    def orientatation(self,orientatation:dict):
+        try:
+            if type(orientatation) is dict:
+                self.__orientatation=orientatation
+            else:
+                raise ValueError
+        except ValueError:
+            print('ERROR: wrong type')
+
+
 
 class Pelvis(Segment):
-    def __init__(self,body:body,pelvisWidth:float): #pelvisWidth in meters
+    def __init__(self,body:Body,pelvisWidth:float): #pelvisWidth in meters
         Segment.__init__('Pelvis',Segment.set_mass(-7.498,0.0976,0.04896,body=body),Segment.set_inertia(-775, 14.7, 1.685,-1568 ,12 ,7.741,-934,11.8,3.44,body=body),{'pelvisWidth':pelvisWidth},body)
-        self.__hip_r:pos3d:JointCenter
-        self.__hip_l:pos3d:JointCenter
     def set_markers (sacrum, asisR, asisL):
         Segment.set_markers(sacrum, asisR, asisL)
     def set_joint_center(self):
         coefU=self.anthropometric['pelvisWidth']*0.598
         coefV=self.anthropometric['pelvisWidth']*0.344
         coefW=-self.anthropometric['pelvisWidth']*0.29
-        hip_r=pos3d.JointCenter('hip_r',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=-coefV,coefW=coefW)
-        hip_l=pos3d.JointCenter('hip_l',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=coefW) 
+        hip_r=JointCenter('hip_r',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=-coefV,coefW=coefW)
+        hip_l=JointCenter('hip_l',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=coefW) 
         Segment.set_joint_center(hip_r,hip_l)
-    def calculate_local_system():
-        pass
+    def calculate_local_system(self):
+        k=Vector.unitary_vector(Vector.get_vector_from_two_points(self.markers[2],self.markers[1]))
+        i=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[2],self.markers[1],self.markers[0]))
+        j=Vector.perpendicular_vector(k,i)
+        self.orientatation={'i':i,'j':j,'k':k}
+
+        
     
 
 
