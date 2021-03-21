@@ -121,6 +121,26 @@ class Pelvis(Segment):
         j=Vector.perpendicular_vector(k,i)
         self.orientatation={'i':i,'j':j,'k':k}
 
+class Thigh(Segment):
+    def __init__(self,body:Body,side='rigth'):
+        if side=='rigth':
+            self.__side=1
+        elif side=='left':
+            self.__side=-1
+        Segment.__init__('Thigh',Segment.set_mass(-2.649,0.1463,0.0137,body=body),Segment.set_inertia(13.5,11.3 ,-2.28,-3557, 31.7 ,18.61,3690,32.02,19.24 ,body=body),{},body)
+    def set_markers (femoralWand):
+        Segment.set_markers(femoralWand)
+    def set_joint_center(self,hipJointCenter:JointCenter,kneeJointCenter:JointCenter):
+        Segment.set_joint_center(hipJointCenter,kneeJointCenter)
+    def calculate_local_system(self):
+        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
+        if self.__side==1:
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[0],self.jointCenter[1]))
+        elif self.__side==-1:
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1],self.markers[0],self.jointCenter[0]))
+        k=Vector.perpendicular_vector(i,j)
+        self.orientatation={'i':i,'j':j,'k':k}
+
 class Calf(Segment):
     def __init__(self,body:Body,kneeDiameter:float,side='rigth'): #kneeDiameter in meters
         if side=='rigth':
@@ -139,9 +159,9 @@ class Calf(Segment):
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
         if self.__side==1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[0],self.jointCenter[1]))
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[1],self.jointCenter[0]))
         elif self.__side==-1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[0],self.markers[0],self.jointCenter[1]))
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1],self.markers[0],self.jointCenter[0]))
         k=Vector.perpendicular_vector(i,j)
         self.orientatation={'i':i,'j':j,'k':k}
         
