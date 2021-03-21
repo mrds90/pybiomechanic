@@ -121,6 +121,29 @@ class Pelvis(Segment):
         j=Vector.perpendicular_vector(k,i)
         self.orientatation={'i':i,'j':j,'k':k}
 
+class Calf(Segment):
+    def __init__(self,body:Body,kneeDiameter:float,side='rigth'): #kneeDiameter in meters
+        if side=='rigth':
+            self.__side=1
+        elif side=='left':
+            self.__side=-1
+        Segment.__init__('Calf',Segment.set_mass(-1.592,0.0362,0.0121,body=body),Segment.set_inertia(-70.5, 1.134, 0.3,-1105 ,4.59 ,6.63,-1152,4.594,6.815,body=body),{'kneeDiameter':kneeDiameter},body)
+    def set_markers (lateralFemoralEpicondyle, lateralMalleolus, tibialWand):
+        Segment.set_markers(lateralFemoralEpicondyle, lateralMalleolus, tibialWand)
+    def set_joint_center(self,ankleJointCenter:JointCenter):
+        coefU=0
+        coefV=0
+        coefW=self.anthropometric['kneeDiameter']*0.5
+        knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=self.__side*coefW,sign2=-self.__side)
+        Segment.set_joint_center(knee,ankleJointCenter)
+    def calculate_local_system(self):
+        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
+        if self.__side==1:
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[0],self.jointCenter[1]))
+        elif self.__side==-1:
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[0],self.markers[0],self.jointCenter[1]))
+        k=Vector.perpendicular_vector(i,j)
+        self.orientatation={'i':i,'j':j,'k':k}
         
     
 
