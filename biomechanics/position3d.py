@@ -75,12 +75,18 @@ class CenterOfMass(Point3D):
         Point3D.__init__(self,self.__position,label,samplingFrecuency)
 
 class JointCenter(Point3D): 
-    def __init__(self,label:str,marker1:Marker,marker2:Marker,marker3:Marker,order=[1,2,3],coefU:float,coefV:float,coefW:float,sign2=1,sign3=1): #order is 1=u, 2=v and 3=w
+    def __init__(self,label:str,marker1:Marker,marker2:Marker,marker3:Marker,order=[1,2,3],coefU:float,coefV:float,coefW:float,sign2=1,sign3=1,origin=3): #order is 1=u, 2=v and 3=w
+        if origin==1:
+            origin=marker1
+        elif origin==2
+            origin=marker2
+        elif origin==3:
+            origin==marker3
         self.__vectors=[None, None, None]
         self.__vectors[order[0]-1]=self.first_vector(marker1,marker2)
         self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3,sign2)
         self.__vectors[order[2]-1]=self.third_vector(sign3)
-        Point3D.__init__(self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],marker3,coefU,coefV,coefW),label,marker1.fs)
+        Point3D.__init__(self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],origin,coefU,coefV,coefW),label,marker1.fs)
     def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
         vector=marker2.position-marker1.position
         return Vector.unitary_vector(Vector.new_vector_from_np_array(vector))
