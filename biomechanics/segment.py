@@ -24,7 +24,7 @@ class Segment:
         self.__markers=[]
         self.__orientatation={}
     def set_markers(*markers):
-        # try method to verify Marker Objet type is missing
+        # try method, to verify Marker Objet type, is missing
         for marker in markers:
             self.__markers.append(marker)
     def calculate_joint_center():
@@ -123,10 +123,11 @@ class Pelvis(Segment):
 
 class Thigh(Segment):
     def __init__(self,body:Body,side='rigth'):
+        self.__side=side
         if side=='rigth':
-            self.__side=1
+            self.__sideSign=1
         elif side=='left':
-            self.__side=-1
+            self.__sideSign=-1
         Segment.__init__('Thigh',Segment.set_mass(-2.649,0.1463,0.0137,body=body),Segment.set_inertia(13.5,11.3 ,-2.28,-3557, 31.7 ,18.61,3690,32.02,19.24 ,body=body),{},body)
     def set_markers (femoralWand):
         Segment.set_markers(femoralWand)
@@ -134,19 +135,20 @@ class Thigh(Segment):
         Segment.set_joint_center(hipJointCenter,kneeJointCenter)
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
-        if self.__side==1:
+        if self.__sideSign==1:
             j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[0],self.jointCenter[1]))
-        elif self.__side==-1:
+        elif self.__sideSign==-1:
             j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1],self.markers[0],self.jointCenter[0]))
         k=Vector.perpendicular_vector(i,j)
         self.orientatation={'i':i,'j':j,'k':k}
 
 class Calf(Segment):
     def __init__(self,body:Body,kneeDiameter:float,side='rigth'): #kneeDiameter in meters
+        self.__side=side
         if side=='rigth':
-            self.__side=1
+            self.__sideSign=1
         elif side=='left':
-            self.__side=-1
+            self.__sideSign=-1
         Segment.__init__('Calf',Segment.set_mass(-1.592,0.0362,0.0121,body=body),Segment.set_inertia(-70.5, 1.134, 0.3,-1105 ,4.59 ,6.63,-1152,4.594,6.815,body=body),{'kneeDiameter':kneeDiameter},body)
     def set_markers (lateralFemoralEpicondyle, lateralMalleolus, tibialWand):
         Segment.set_markers(lateralFemoralEpicondyle, lateralMalleolus, tibialWand)
@@ -154,7 +156,7 @@ class Calf(Segment):
         coefU=0
         coefV=0
         coefW=self.anthropometric['kneeDiameter']*0.5
-        knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=self.__side*coefW,sign2=-self.__side,origin=1)
+        knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=self.__sideSign*coefW,sign2=-self.__sideSign,origin=1)
         Segment.set_joint_center(knee,ankleJointCenter)
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
@@ -167,29 +169,30 @@ class Calf(Segment):
 
 class Foot(Segment):
     def __init__(self,body:Body,footLength:float,footWidth:float,malleolusHigh:float,malleolusWidth:float,side='rigth'): #kneeDiameter in meters
+        self.__side=side
         if side=='rigth':
-            self.__side=1
+            self.__sideSign=1
         elif side=='left':
-            self.__side=-1
+            self.__sideSign=-1
         Segment.__init__('Foot',Segment.set_mass(-0.829,0.0077,0.0073,body=body),Segment.set_inertia(-15.48,0.144,0.088,-100,0.480,0.626,-97.09,0.414,0.614,body=body),{'footLength':footLength,'footWidth':footWidth,'malleolusHigh':malleolusHigh,'malleolusWidth':malleolusWidth},body)
     def set_markers (metatarsal,heel,lateralMalleolus):
         Segment.set_markers(metatarsal,heel,lateralMalleolus)
     def set_joint_center(self):
-        ########################################################################
-                                    # Continue here #
-        ########################################################################
-        coefUAnkle=0
-        coefVAnkle=0
-        coefWAnkle=self.anthropometric['kneeDiameter']*0.5
-        knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=self.__side*coefW,sign2=-self.__side)
-        Segment.set_joint_center(knee,ankleJointCenter)
+        coefUAnkle=self.anthropometric['footLength']*0.742
+        coefVAnkle=self.anthropometric['malleolusHigh']*1.074
+        coefWAnkle=-self.__sideSign*self.anthropometric['footWidth']*0.187
+        ankle=JointCenter('toe_'+self.__side[0],self.markers[1],self.markers[0],self.markers[2],order=[1,3,2],coefU=coefU,coefV=coefV,coefW=coefW,sign2=-1)
+
+        coefUToe=self.anthropometric['footLength']*0.016
+        coefVToe=self.anthropometric['malleolusHigh']*0.392
+        coefWToe=self.__sideSign*self.anthropometric['malleolusWidth']*0.478
+        toe=JointCenter('toe_'+self.__side[0],self.markers[1],self.markers[0],self.markers[2],order=[1,3,2],coefU=coefU,coefV=coefV,coefW=coefW,sign2=-1)
+
+        Segment.set_joint_center(ankle,toe)
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
-        if self.__side==1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[1],self.jointCenter[0]))
-        elif self.__side==-1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1],self.markers[0],self.jointCenter[0]))
-        k=Vector.perpendicular_vector(i,j)
+        k=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[0],self.jointCenter[1],self.markers[1]))
+        j=Vector.perpendicular_vector(k,i)
         self.orientatation={'i':i,'j':j,'k':k}        
     
 

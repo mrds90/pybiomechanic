@@ -1,3 +1,3 @@
-from .segment import Segment
+from .segment import *
 from .position3d import *
 from .vectors import *
