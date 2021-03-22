@@ -1,5 +1,5 @@
 import numpy as np
-import position3d as pos3d
+# from .position3d import Point3D
 
 class Vector:
     def __init__(self,x=0,y=0,z=0):
@@ -26,38 +26,38 @@ class Vector:
             print ('ERROR: wrong type or shape')
             
     @classmethod
-    def get_vector_from_two_points(cls,head:pos3d.Point3D,tail:pos3d.Point3D):
+    def get_vector_from_two_points(cls,head,tail):
         try:
-            if (head.position.shape[0]==3 and tail.position.shape[0]==3) or (head.position.shape[1]==3 and tail.position.shape[1]==3):
-                vector=head.position-tail.position
+            if (head.shape[0]==3 and tail.shape[0]==3) or (head.shape[1]==3 and tail.shape[1]==3):
+                vector=head-tail
                 return Vector.new_vector_from_np_array(vector)
             else:
                 raise ValueError
         except ValueError:
             print('ERROR: wrong type or shape')
     @classmethod
-    def get_vector_from_three_points(cls,head1:pos3d.Point3D,head2:pos3d.Point3D,tail:pos3d.Point3D):
+    def get_vector_from_three_points(cls,head1,head2,tail):
         try:
-            if ((head1.position.shape[0]==3 and head2.position.shape[0]==3 and tail.position.shape[0]==3) or (head1.position.shape[1]==3 and head2.position.shape[1]==3 and tail.position.shape[1]==3)) and head1.position.shape==head2.position.shape==tail.position.shape :
-                vector=cross(head1.position-tail.position,head2.position-tail.position)
+            if ((head1.shape[0]==3 and head2.shape[0]==3 and tail.shape[0]==3) or (head1.shape[1]==3 and head2.shape[1]==3 and tail.shape[1]==3)) and head1.shape==head2.shape==tail.shape :
+                vector=cross(head1-tail,head2-tail)
                 return Vector.new_vector_from_np_array(vector)
             else:
                 raise ValueError
         except ValueError:
             print('ERROR: wrong type or shape')
     @classmethod
-    def module(cls,vector:Vector):
+    def module(cls,vector):
         if vector.orientatation.shape[0]==3:
             return np.sqrt((vector.orientatation*vector.orientatation).sum(axis=1))
         elif vector.orientatation.shape[1]==3:
             return np.sqrt((vector.orientatation*vector.orientatation).sum(axis=0))
     @classmethod
-    def unitary_vector(cls,vector:Vector):
+    def unitary_vector(cls,vector):
         module=module(vector) #get module of the vector
         versorOrientation=np.divide(vector.orientatation,np.transpose([module,module,module])) # wise element division with moudule
         return Vector.new_vector_from_np_array(versorOrientation)
     @classmethod
-    def perpendicular_vector(cls,vector1:Vector,vector2:Vector,sign=1):
+    def perpendicular_vector(cls,vector1,vector2,sign=1):
         vector=None
         if vector1.orientatation.shape[0]==3 and vector2.orientatation.shape[0]==3:
             vector=np.cross(vector1.orientatation,vector2.orientatation,axis=1)

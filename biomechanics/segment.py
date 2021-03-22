@@ -1,5 +1,6 @@
 import numpy as np
 from biomechanics import *
+from .position3d import JointCenter
 
 class Body:
     def __init__(self,mass:float,height):
@@ -31,13 +32,17 @@ class Segment:
         pass #define for each kind of segment
     def set_joint_center(self,proximalJointCenter:JointCenter, distalJointCenter:JointCenter): #pelvis case the order is rigth and left hip
         self.__jointCenter=[proximalJointCenter,distalJointCenter]
-    def set_mass(self, b0:float, b1:float, b2:float,body=self.__body):
+    def set_mass(self, b0:float, b1:float, b2:float,body=None):
+        if body==None:
+            body=self.__body
         self.__mass=b0+b1*body.mass+b2*body.height
-    def set_inertia(self, b0Long:float, b1Long:float, b2Long:float,b0AntPos:float, b1AntPos:float, b2AntPos:float,b0MedLat:float, b1MedLat:float, b2MedLat:float,body=self.__body):
+    def set_inertia(self, b0Long:float, b1Long:float, b2Long:float,b0AntPos:float, b1AntPos:float, b2AntPos:float,b0MedLat:float, b1MedLat:float, b2MedLat:float,body=None):
+        if body==None:
+            body=self.__body
         Ixx=(b0Long+b1Long*body.mass+b2Long*body.height)/10000 # get in [kg×m^2]
         Iyy=(b0AntPos+b1AntPos*body.mass+b2AntPos*body.height)/10000 # get in [kg×m^2]
         Izz=(b0MedLat+b1MedLat*body.mass+b2MedLat*body.height)/10000 # get in [kg×m^2]
-        self.__inertia=np.array([[Ixx,0,0][0,Iyy,0][0,0,Izz]])
+        self.__inertia=np.array([[Ixx,0,0],[0,Iyy,0],[0,0,Izz]])
     def set_center_of_mass(self,proportionalProximalDistance:float):
         try:
             if len(self.__jointCenter==2 and type(proportionalProximalDistance) is float):
@@ -116,8 +121,8 @@ class Pelvis(Segment):
         hip_l=JointCenter('hip_l',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=coefW) 
         Segment.set_joint_center(hip_r,hip_l)
     def calculate_local_system(self):
-        k=Vector.unitary_vector(Vector.get_vector_from_two_points(self.markers[2],self.markers[1]))
-        i=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[2],self.markers[1],self.markers[0]))
+        k=Vector.unitary_vector(Vector.get_vector_from_two_points(self.markers[2].position,self.markers[1].position))
+        i=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[2].position,self.markers[1].position,self.markers[0].position))
         j=Vector.perpendicular_vector(k,i)
         self.orientatation={'i':i,'j':j,'k':k}
 
@@ -134,11 +139,11 @@ class Thigh(Segment):
     def set_joint_center(self,hipJointCenter:JointCenter,kneeJointCenter:JointCenter):
         Segment.set_joint_center(hipJointCenter,kneeJointCenter)
     def calculate_local_system(self):
-        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
+        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0].position,self.jointCenter[1].position))
         if self.__sideSign==1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[0],self.jointCenter[1]))
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0].position,self.jointCenter[0].position,self.jointCenter[1].position))
         elif self.__sideSign==-1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1],self.markers[0],self.jointCenter[0]))
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1].position,self.markers[0].position,self.jointCenter[0].position))
         k=Vector.perpendicular_vector(i,j)
         self.orientatation={'i':i,'j':j,'k':k}
 
@@ -159,11 +164,11 @@ class Calf(Segment):
         knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=self.__sideSign*coefW,sign2=-self.__sideSign,origin=1)
         Segment.set_joint_center(knee,ankleJointCenter)
     def calculate_local_system(self):
-        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
+        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0].position,self.jointCenter[1].position))
         if self.__side==1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0],self.jointCenter[1],self.jointCenter[0]))
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[0].position,self.jointCenter[1].position,self.jointCenter[0].position))
         elif self.__side==-1:
-            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1],self.markers[0],self.jointCenter[0]))
+            j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1].position,self.markers[0].position,self.jointCenter[0].position))
         k=Vector.perpendicular_vector(i,j)
         self.orientatation={'i':i,'j':j,'k':k}
 
@@ -190,8 +195,8 @@ class Foot(Segment):
 
         Segment.set_joint_center(ankle,toe)
     def calculate_local_system(self):
-        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0],self.jointCenter[1]))
-        k=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[0],self.jointCenter[1],self.markers[1]))
+        i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0].position,self.jointCenter[1].position))
+        k=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[0].position,self.jointCenter[1].position,self.markers[1].position))
         j=Vector.perpendicular_vector(k,i)
         self.orientatation={'i':i,'j':j,'k':k}        
     

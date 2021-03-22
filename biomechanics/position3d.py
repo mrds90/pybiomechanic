@@ -1,7 +1,6 @@
 import numpy as np
 from scipy import signal
-from biomechanics import Segment
-from vectors import Vector
+from .vectors import Vector
 
 
 class Point3D:
@@ -66,7 +65,7 @@ class Point3D:
     def fs(self):
         return self.__fs
 class Marker (Point3D):
-    def __init__(self,position:np.array,label:str,samplingFrecuency:int,segment:Segment):
+    def __init__(self,position:np.array,label:str,samplingFrecuency:int):
         Point3D.__init__(self,position,label,samplingFrecuency)
 
 class CenterOfMass(Point3D):
@@ -75,10 +74,10 @@ class CenterOfMass(Point3D):
         Point3D.__init__(self,self.__position,label,samplingFrecuency)
 
 class JointCenter(Point3D): 
-    def __init__(self,label:str,marker1:Marker,marker2:Marker,marker3:Marker,order=[1,2,3],coefU:float,coefV:float,coefW:float,sign2=1,sign3=1,origin=3): #order is 1=u, 2=v and 3=w
+    def __init__(self,label:str,marker1:Marker,marker2:Marker,marker3:Marker,coefU:float,coefV:float,coefW:float,order=[1,2,3],sign2=1,sign3=1,origin=3): #order is 1=u,# 2=v #and 3=w
         if origin==1:
             origin=marker1
-        elif origin==2
+        elif origin==2:
             origin=marker2
         elif origin==3:
             origin==marker3
