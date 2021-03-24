@@ -80,7 +80,7 @@ class JointCenter(Point3D):
         elif origin==2:
             origin=marker2
         elif origin==3:
-            origin==marker3
+            origin=marker3
         self.__vectors=[None, None, None]
         self.__vectors[order[0]-1]=self.first_vector(marker1,marker2)
         self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3,sign2)
@@ -95,8 +95,8 @@ class JointCenter(Point3D):
         vector1=Vector.new_vector_from_np_array(vector1)
         vector2=marker2.position-marker3.position
         vector2=Vector.new_vector_from_np_array(vector2)
-        print ('vector1',vector1.orientatation.shape)
-        print ('vector2',vector2.orientatation.shape)
+        # print ('vector1',vector1.orientatation.shape)
+        # print ('vector2',vector2.orientatation.shape)
         vector=None
         return Vector.new_vector_from_np_array(sign*Vector.unitary_vector(Vector.perpendicular_vector(vector1,vector2,sign)).orientatation)
     def third_vector(self,sign=1): #third to estimate, dosent mean that is w
@@ -108,6 +108,6 @@ class JointCenter(Point3D):
             return Vector.perpendicular_vector(self.__vectors[0],self.__vectors[1],sign)
 
     def __set_position(self,u:Vector,v:Vector,w:Vector,origin,coefU:float,coefV:float,coefW:float):
-        return origin+coefU*u.orientatation+coefV*v.orientatation+coefW*w.orientatation
+        return origin.position+coefU*u.orientatation+coefV*v.orientatation+coefW*w.orientatation
 
 

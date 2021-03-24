@@ -54,8 +54,8 @@ class Vector:
     @classmethod
     def unitary_vector(cls,vector):
         module=cls.module(vector) #get module of the vector
-        print('modulo' , module)
-        print('vector', vector.orientatation)
+        # print('modulo' , module)
+        # print('vector', vector.orientatation)
         versorOrientation=np.divide(vector.orientatation,np.transpose([module,module,module])) # wise element division with moudule
         return Vector.new_vector_from_np_array(versorOrientation)
     @classmethod
