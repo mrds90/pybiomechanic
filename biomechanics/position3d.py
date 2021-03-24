@@ -25,9 +25,9 @@ class Point3D:
         w = fc / (self.__fs / 2) # Normalize the frequency
         b, a = signal.butter(2, w, 'low')
         if self.__position.shape[0]==3:
-            self.__position=signal.filtfilt(b, a, self.__position,axis=1)
+            self.__position[np.argwhere(~np.isnan(self.__position[0,:]))]=signal.filtfilt(b, a, self.__position[np.argwhere(~np.isnan(self.__position[0,:]))],axis=1)
         elif self.__position.shape[1]==3:
-            self.__position=signal.filtfilt(b, a, self.__position,axis=0)
+            self.__position[np.argwhere(~np.isnan(self.__position[:,0]))]=signal.filtfilt(b, a, self.__position[np.argwhere(~np.isnan(self.__position[:,0]))],axis=0)
         self.__speed=self.__get_derivative(self.__position)
         self.__aceleration=self.__get_derivative(self.__speed)
     def __get_derivative(self,variable):

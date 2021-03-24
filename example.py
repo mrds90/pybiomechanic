@@ -1,5 +1,6 @@
 from biomechanics import *
 import pyc3dserver as c3d
+import numpy as np
 itf = c3d.c3dserver(False)
 ret = c3d.open_c3d(itf, "0037_Davis_MarchaDavis_Walking02C2020Cu2.c3d")
 dict_markers = c3d.get_dict_markers(itf)
@@ -9,6 +10,11 @@ body=Body(float(dict_groups['Antropometria']['PESO'])  ,float(dict_groups['Antro
 #Pelvis
 pelvis=Pelvis(body,float(dict_groups['Antropometria']['LONGITUD_ASIS']))
 sacrum=Marker(dict_markers['DATA']['POS']['sacrum'],'sacrum',340)
+
+# print (np.argwhere(~np.isnan(sacrum.position[:,0])))
+print (sacrum.position[1300])
+sacrum.filter()
+print (sacrum.position[1300])
 rAsis=Marker(dict_markers['DATA']['POS']['r asis'],'r asis',340)
 lAsis=Marker(dict_markers['DATA']['POS']['r asis'],'l asis',340)
 pelvis.set_markers(sacrum,rAsis,lAsis)
