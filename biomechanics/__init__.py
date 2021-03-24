@@ -1,3 +1,4 @@
+from .vectors import Vector
 from .position3d import Point3D
 from .position3d import JointCenter
 from .position3d import CenterOfMass

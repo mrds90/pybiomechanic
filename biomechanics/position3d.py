@@ -85,17 +85,20 @@ class JointCenter(Point3D):
         self.__vectors[order[0]-1]=self.first_vector(marker1,marker2)
         self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3,sign2)
         self.__vectors[order[2]-1]=self.third_vector(sign3)
-        Point3D.__init__(self.__set_position(self,self.__vectors[0],self.__vectors[1],self.__vectors[2],origin,coefU,coefV,coefW),label,marker1.fs)
+        position=self.__set_position(self.__vectors[0],self.__vectors[1],self.__vectors[2],origin,coefU,coefV,coefW)
+        Point3D.__init__(self,position,label,marker1.fs)
     def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
         vector=marker2.position-marker1.position
         return Vector.unitary_vector(Vector.new_vector_from_np_array(vector))
     def second_vector(self,marker1,marker2,marker3,sign=1): #second to estimate, dosent mean that is v,
         vector1=marker1.position-marker3.position
         vector1=Vector.new_vector_from_np_array(vector1)
-        vector2=marker2.position-marker3.__position
+        vector2=marker2.position-marker3.position
         vector2=Vector.new_vector_from_np_array(vector2)
+        print ('vector1',vector1.orientatation.shape)
+        print ('vector2',vector2.orientatation.shape)
         vector=None
-        return sign*Vector.unitary_vector(Vector.perpendicular_vector(vector1,vector2,sign))
+        return Vector.new_vector_from_np_array(sign*Vector.unitary_vector(Vector.perpendicular_vector(vector1,vector2,sign)).orientatation)
     def third_vector(self,sign=1): #third to estimate, dosent mean that is w
         if self.__vectors[0]==None:
             return Vector.perpendicular_vector(self.__vectors[1],self.__vectors[2],sign)
@@ -104,7 +107,7 @@ class JointCenter(Point3D):
         if self.__vectors[2]==None:
             return Vector.perpendicular_vector(self.__vectors[0],self.__vectors[1],sign)
 
-    def __set_position(self,u,v,w,origin,coefU:float,coefV:float,coefW:float):
-        return origin+coefU*u+coefV*v+coefW*w
+    def __set_position(self,u:Vector,v:Vector,w:Vector,origin,coefU:float,coefV:float,coefW:float):
+        return origin+coefU*u.orientatation+coefV*v.orientatation+coefW*w.orientatation
 
 
