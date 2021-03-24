@@ -47,3 +47,16 @@ lTW=Marker(dict_markers['DATA']['POS']['l bar 2'],'l tibial wand',340)
 calfL=Calf(body,float(dict_groups['Antropometria']['DIAMETRO_RODILLA_IZQUIERDA']),side='left')
 calfL.set_markers(lLFE,lLM,lTW)
 calfL.set_joint_center(footL.jointCenter[0])
+
+#Thigh
+    #rigth
+rFW=Marker(dict_markers['DATA']['POS']['r bar 1'],'r femoral wand',340)
+thighR=Thigh(body,side='rigth')
+thighR.set_markers(rFW)
+thighR.set_joint_center(pelvis.jointCenter[0],calfR.jointCenter[0])
+
+    #left
+lFW=Marker(dict_markers['DATA']['POS']['l bar 1'],'l femoral wand',340)
+thighL=Thigh(body,side='left')
+thighL.set_markers(rFW)
+thighL.set_joint_center(pelvis.jointCenter[1],calfL.jointCenter[0])

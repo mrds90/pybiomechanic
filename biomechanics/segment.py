@@ -143,7 +143,7 @@ class Thigh(Segment):
     def set_markers (self,femoralWand):
         Segment.set_markers(self,femoralWand)
     def set_joint_center(self,hipJointCenter:JointCenter,kneeJointCenter:JointCenter):
-        Segment.set_joint_center(hipJointCenter,kneeJointCenter)
+        Segment.set_joint_center(self,hipJointCenter,kneeJointCenter)
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0].position,self.jointCenter[1].position))
         if self.__sideSign==1:
