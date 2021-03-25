@@ -20,7 +20,6 @@ lAsis.filter()
 pelvis.set_markers(sacrum,rAsis,lAsis)
 pelvis.set_joint_center()
 
-# pyplot.plot(range(pelvis.jointCenter[0].uvw[1].orientation.shape[0]),pelvis.jointCenter[0].uvw[1].orientation) 
 # pyplot.plot(range(pelvis.jointCenter[0].position.shape[0]),pelvis.jointCenter[1].position) 
 # pyplot.show()
 
@@ -36,7 +35,6 @@ rMal.filter()
 footR.set_markers(rMet,rHeel,rMal)
 footR.set_joint_center()
 
-# pyplot.plot(range(footR.jointCenter[0].uvw[1].orientation.shape[0]),footR.jointCenter[0].uvw[1].orientation) 
 # pyplot.plot(range(footR.jointCenter[0].position.shape[0]),footR.jointCenter[1].position) 
 # pyplot.show()
 
@@ -66,6 +64,10 @@ calfR=Calf(body,float(0.01*dict_groups['Antropometria']['DIAMETRO_RODILLA_DERECH
 calfR.set_markers(rLFE,rLM,rTW)
 calfR.set_joint_center(footR.jointCenter[0])
 
+# pyplot.plot(range(calfR.jointCenter[0].position.shape[0]),calfR.jointCenter[0].position) 
+# pyplot.show()
+
+
     #left
 lLFE=Marker(dict_markers['DATA']['POS']['l knee 1'],'l lateral femoral epicondyle',340)
 lLFE.filter()
@@ -76,6 +78,9 @@ lTW.filter()
 calfL=Calf(body,float(0.01*dict_groups['Antropometria']['DIAMETRO_RODILLA_IZQUIERDA']),side='left')
 calfL.set_markers(lLFE,lLM,lTW)
 calfL.set_joint_center(footL.jointCenter[0])
+
+# pyplot.plot(range(calfL.jointCenter[0].position.shape[0]),calfL.jointCenter[0].position) 
+# pyplot.show()
 
 #Thigh
     #rigth

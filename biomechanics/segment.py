@@ -167,7 +167,7 @@ class Calf(Segment):
         coefU=0
         coefV=0
         coefW=self.anthropometric['kneeDiameter']*0.5
-        knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[2,1,3],coefU=coefU,coefV=coefV,coefW=self.__sideSign*coefW,sign2=-self.__sideSign,origin=1)
+        knee=JointCenter('knee_'+self.__side[0],self.markers[1],self.markers[0],self.markers[2],order=[2,1,3],coefU=coefU,coefV=coefV,coefW=self.__sideSign*coefW,sign2=self.__sideSign,origin=2)
         Segment.set_joint_center(self,knee,ankleJointCenter)
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0].position,self.jointCenter[1].position))
