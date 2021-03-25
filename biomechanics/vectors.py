@@ -3,12 +3,12 @@ import numpy as np
 
 class Vector:
     def __init__(self,x=0,y=0,z=0):
-        self.__orientatation=np.array([x,y,z])
-        self.__orientatation=self.__orientatation.transpose()
-        self.__module=Vector.module(self)
+        self.__orientation=np.array([x,y,z])
+        self.__orientation=self.__orientation.transpose()
+        self.__module=Vector.get_module(self)
     @property
-    def orientatation(self):
-        return self.__orientatation
+    def orientation(self):
+        return self.__orientation
     @property
     def module(self):
         return self.__module
@@ -46,25 +46,24 @@ class Vector:
         except ValueError:
             print('ERROR: wrong type or shape')
     @classmethod
-    def module(cls,vector):
-        if vector.orientatation.shape[0]==3:
-            return np.sqrt((vector.orientatation*vector.orientatation).sum(axis=0))
-        elif vector.orientatation.shape[1]==3:
-            return np.sqrt((vector.orientatation*vector.orientatation).sum(axis=1))
+    def get_module(cls,vector):
+        if vector.orientation.shape[0]==3:
+            return np.sqrt((vector.orientation*vector.orientation).sum(axis=0))
+        elif vector.orientation.shape[1]==3:
+            return np.sqrt((vector.orientation*vector.orientation).sum(axis=1))
     @classmethod
-    def unitary_vector(cls,vector):
-        module=cls.module(vector) #get module of the vector
-        # print('modulo' , module)
-        # print('vector', vector.orientatation)
-        versorOrientation=np.divide(vector.orientatation,np.transpose([module,module,module])) # wise element division with moudule
+    def unitary_vector(cls,vector:np.array):
+        module=cls.get_module(vector) #get module of the vector
+        moduleMatrix=np.transpose([module,module,module])
+        versorOrientation=np.divide(vector.orientation,moduleMatrix) # wise element division with moudule
         return Vector.new_vector_from_np_array(versorOrientation)
     @classmethod
     def perpendicular_vector(cls,vector1,vector2,sign=1):
         vector=None
-        if vector1.orientatation.shape[0]==3 and vector2.orientatation.shape[0]==3:
-            vector=np.cross(vector1.orientatation,vector2.orientatation,axis=0)
-        elif vector1.orientatation.shape[1]==3 and vector2.orientatation.shape[1]==3:
-            vector=np.cross(vector1.orientatation,vector2.orientatation,axis=1)
+        if vector1.orientation.shape[0]==3 and vector2.orientation.shape[0]==3:
+            vector=sign*np.cross(vector1.orientation,vector2.orientation,axis=0)
+        elif vector1.orientation.shape[1]==3 and vector2.orientation.shape[1]==3:
+            vector=sign*np.cross(vector1.orientation,vector2.orientation,axis=1)
         if type(vector)==type(np.array([1,2])):
             return Vector.new_vector_from_np_array(vector)
        

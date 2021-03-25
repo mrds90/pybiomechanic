@@ -83,31 +83,35 @@ class JointCenter(Point3D):
             origin=marker3
         self.__vectors=[None, None, None]
         self.__vectors[order[0]-1]=self.first_vector(marker1,marker2)
-        self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3,sign2)
+        self.__vectors[order[1]-1]=self.second_vector(marker1,marker2,marker3,sign=sign2)
         self.__vectors[order[2]-1]=self.third_vector(sign3)
         position=self.__set_position(self.__vectors[0],self.__vectors[1],self.__vectors[2],origin,coefU,coefV,coefW)
         Point3D.__init__(self,position,label,marker1.fs)
-    def first_vector(self,marker1,marker2): #first to estimate, dosent mean that is u
-        vector=marker2.position-marker1.position
+    def first_vector(self,head,tail): #first to estimate, dosent mean that is u
+        vector=head.position-tail.position
         return Vector.unitary_vector(Vector.new_vector_from_np_array(vector))
     def second_vector(self,marker1,marker2,marker3,sign=1): #second to estimate, dosent mean that is v,
         vector1=marker1.position-marker3.position
         vector1=Vector.new_vector_from_np_array(vector1)
         vector2=marker2.position-marker3.position
         vector2=Vector.new_vector_from_np_array(vector2)
-        # print ('vector1',vector1.orientatation.shape)
-        # print ('vector2',vector2.orientatation.shape)
+        # print ('vector1',vector1.orientation.shape)
+        # print ('vector2',vector2.orientation.shape)
         vector=None
-        return Vector.new_vector_from_np_array(sign*Vector.unitary_vector(Vector.perpendicular_vector(vector1,vector2,sign)).orientatation)
+        return Vector.unitary_vector(Vector.perpendicular_vector(vector1,vector2,sign=sign))
     def third_vector(self,sign=1): #third to estimate, dosent mean that is w
         if self.__vectors[0]==None:
-            return Vector.perpendicular_vector(self.__vectors[1],self.__vectors[2],sign)
+            return Vector.perpendicular_vector(self.__vectors[1],self.__vectors[2],sign=sign)
         if self.__vectors[1]==None:
-            return Vector.perpendicular_vector(self.__vectors[2],self.__vectors[0],sign)
+            return Vector.perpendicular_vector(self.__vectors[2],self.__vectors[0],sign=sign)
         if self.__vectors[2]==None:
-            return Vector.perpendicular_vector(self.__vectors[0],self.__vectors[1],sign)
+            return Vector.perpendicular_vector(self.__vectors[0],self.__vectors[1],sign=sign)
 
     def __set_position(self,u:Vector,v:Vector,w:Vector,origin,coefU:float,coefV:float,coefW:float):
-        return origin.position+coefU*u.orientatation+coefV*v.orientatation+coefW*w.orientatation
+        return origin.position+coefU*u.orientation+coefV*v.orientation+coefW*w.orientation
+
+    @property
+    def uvw(self):
+        return self.__vectors
 
 

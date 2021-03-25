@@ -123,8 +123,8 @@ class Pelvis(Segment):
         coefU=self.anthropometric['pelvisWidth']*0.598
         coefV=self.anthropometric['pelvisWidth']*0.344
         coefW=-self.anthropometric['pelvisWidth']*0.29
-        hip_r=JointCenter('hip_r',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=-coefV,coefW=coefW)
-        hip_l=JointCenter('hip_l',self.markers[1],self.markers[2],self.markers[0],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=coefW) 
+        hip_r=JointCenter('hip_r',self.markers[2],self.markers[1],self.markers[0],order=[2,3,1],coefU=coefU,coefV=-coefV,coefW=coefW,sign2=-1)
+        hip_l=JointCenter('hip_l',self.markers[2],self.markers[1],self.markers[0],order=[2,3,1],coefU=coefU,coefV=coefV,coefW=coefW,sign2=-1) 
         Segment.set_joint_center(self,hip_r,hip_l)
     def calculate_local_system(self):
         k=Vector.unitary_vector(Vector.get_vector_from_two_points(self.markers[2].position,self.markers[1].position))
@@ -167,7 +167,7 @@ class Calf(Segment):
         coefU=0
         coefV=0
         coefW=self.anthropometric['kneeDiameter']*0.5
-        knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,2,3],coefU=coefU,coefV=coefV,coefW=self.__sideSign*coefW,sign2=-self.__sideSign,origin=1)
+        knee=JointCenter('knee_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[2,1,3],coefU=coefU,coefV=coefV,coefW=self.__sideSign*coefW,sign2=-self.__sideSign,origin=1)
         Segment.set_joint_center(self,knee,ankleJointCenter)
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.jointCenter[0].position,self.jointCenter[1].position))
