@@ -26,7 +26,7 @@ pelvis.set_joint_center()
 
 #Foot
     #rigth
-footR=Foot(body,0.01*dict_groups['Antropometria']['LONGITUD_PIE_DERECHO'],0.1*dict_groups['Antropometria']['ANCHO_PIE_DERECHO'],0.1*dict_groups['Antropometria']['ALTURA_MALEOLOS_DERECHO'],0.1*dict_groups['Antropometria']['ANCHO_MALEOLOS_DERECHO'],side='rigth')
+footR=Foot(body,0.01*dict_groups['Antropometria']['LONGITUD_PIE_DERECHO'],0.01*dict_groups['Antropometria']['ANCHO_PIE_DERECHO'],0.01*dict_groups['Antropometria']['ALTURA_MALEOLOS_DERECHO'],0.01*dict_groups['Antropometria']['ANCHO_MALEOLOS_DERECHO'],side='rigth')
 rMet=Marker(dict_markers['DATA']['POS']['r met'],'r metatarsal',340)
 rMet.filter()
 rHeel=Marker(dict_markers['DATA']['POS']['r heel'],'r heel',340)
@@ -35,8 +35,13 @@ rMal=Marker(dict_markers['DATA']['POS']['r mall'],'r lateralMalleolus',340)
 rMal.filter()
 footR.set_markers(rMet,rHeel,rMal)
 footR.set_joint_center()
+
+# pyplot.plot(range(footR.jointCenter[0].uvw[1].orientation.shape[0]),footR.jointCenter[0].uvw[1].orientation) 
+# pyplot.plot(range(footR.jointCenter[0].position.shape[0]),footR.jointCenter[1].position) 
+# pyplot.show()
+
     #left
-footL=Foot(body,0.01*dict_groups['Antropometria']['LONGITUD_PIE_IZQUIERDO'],0.1*dict_groups['Antropometria']['ANCHO_PIE_IZQUIERDO'],0.1*dict_groups['Antropometria']['ALTURA_MALEOLOS_IZQUIERDO'],0.1*dict_groups['Antropometria']['ANCHO_MALEOLOS_IZQUIERDO'],side='left')
+footL=Foot(body,0.01*dict_groups['Antropometria']['LONGITUD_PIE_IZQUIERDO'],0.01*dict_groups['Antropometria']['ANCHO_PIE_IZQUIERDO'],0.01*dict_groups['Antropometria']['ALTURA_MALEOLOS_IZQUIERDO'],0.01*dict_groups['Antropometria']['ANCHO_MALEOLOS_IZQUIERDO'],side='left')
 lMet=Marker(dict_markers['DATA']['POS']['l met'],'l metatarsal',340)
 lMet.filter()
 lHeel=Marker(dict_markers['DATA']['POS']['l heel'],'l heel',340)
@@ -46,6 +51,8 @@ lMal.filter()
 footL.set_markers(lMet,lHeel,lMal)
 footL.set_joint_center()
 
+# pyplot.plot(range(footL.jointCenter[0].position.shape[0]),footL.jointCenter[1].position) 
+# pyplot.show()
 
 #Calf
     #rigth

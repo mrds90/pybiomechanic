@@ -189,15 +189,17 @@ class Foot(Segment):
     def set_markers (self,metatarsal,heel,lateralMalleolus):
         Segment.set_markers(self,metatarsal,heel,lateralMalleolus)
     def set_joint_center(self):
-        coefUAnkle=self.anthropometric['footLength']*0.742
-        coefVAnkle=self.anthropometric['malleolusHigh']*1.074
-        coefWAnkle=-self.__sideSign*self.anthropometric['footWidth']*0.187
-        ankle=JointCenter('toe_'+self.__side[0],self.markers[1],self.markers[0],self.markers[2],order=[1,3,2],coefU=coefUAnkle,coefV=coefVAnkle,coefW=coefWAnkle,sign2=-1)
+        
+        coefUAnkle=self.anthropometric['footLength']*0.016
+        coefVAnkle=self.anthropometric['malleolusHigh']*0.392
+        coefWAnkle=self.__sideSign*self.anthropometric['malleolusWidth']*0.478
 
-        coefUToe=self.anthropometric['footLength']*0.016
-        coefVToe=self.anthropometric['malleolusHigh']*0.392
-        coefWToe=self.__sideSign*self.anthropometric['malleolusWidth']*0.478
-        toe=JointCenter('toe_'+self.__side[0],self.markers[1],self.markers[0],self.markers[2],order=[1,3,2],coefU=coefUToe,coefV=coefVToe,coefW=coefWToe,sign2=-1)
+        coefUToe=self.anthropometric['footLength']*0.742
+        coefVToe=self.anthropometric['malleolusHigh']*1.074
+        coefWToe=-self.__sideSign*self.anthropometric['footWidth']*0.187
+
+        ankle=JointCenter('ankle_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,3,2],coefU=coefUAnkle,coefV=coefVAnkle,coefW=coefWAnkle)
+        toe=JointCenter('toe_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,3,2],coefU=coefUToe,coefV=coefVToe,coefW=coefWToe)
 
         Segment.set_joint_center(self,ankle,toe)
     def calculate_local_system(self):
