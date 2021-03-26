@@ -139,7 +139,7 @@ class Thigh(Segment):
             self.__sideSign=1
         elif side=='left':
             self.__sideSign=-1
-        Segment.__init__(self,'Thigh',Segment.set_mass(self,-2.649,0.1463,0.0137,body=body),Segment.set_inertia(self,13.5,11.3 ,-2.28,-3557, 31.7 ,18.61,3690,32.02,19.24 ,body=body),{},body)
+        Segment.__init__(self,'Thigh',Segment.set_mass(self,-2.649,0.1463,0.0137,body=body),Segment.set_inertia(self,-13.5,11.3 ,-2.28,-3557, 31.7 ,18.61,-3690,32.02,19.24 ,body=body),{},body)
     def set_markers (self,femoralWand):
         Segment.set_markers(self,femoralWand)
     def set_joint_center(self,hipJointCenter:JointCenter,kneeJointCenter:JointCenter):
