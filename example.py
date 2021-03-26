@@ -19,8 +19,11 @@ lAsis=Marker(dict_markers['DATA']['POS']['l asis'],'l asis',340)
 lAsis.filter()
 pelvis.set_markers(sacrum,rAsis,lAsis)
 pelvis.set_joint_center()
+pelvis.calculate_local_system()
 
 # pyplot.plot(range(pelvis.jointCenter[0].position.shape[0]),pelvis.jointCenter[1].position) 
+# pyplot.plot(range(pelvis.localSystem['i'].orientation.shape[0]),pelvis.localSystem['i'].orientation) 
+
 # pyplot.show()
 
 #Foot
@@ -34,8 +37,11 @@ rMal=Marker(dict_markers['DATA']['POS']['r mall'],'r lateralMalleolus',340)
 rMal.filter()
 footR.set_markers(rMet,rHeel,rMal)
 footR.set_joint_center()
+footR.calculate_local_system()
+
 
 # pyplot.plot(range(footR.jointCenter[0].position.shape[0]),footR.jointCenter[1].position) 
+# pyplot.plot(range(footR.localSystem['i'].orientation.shape[0]),footR.localSystem['i'].orientation) 
 # pyplot.show()
 
     #left
@@ -48,8 +54,11 @@ lMal=Marker(dict_markers['DATA']['POS']['l mall'],'l lateralMalleolus',340)
 lMal.filter()
 footL.set_markers(lMet,lHeel,lMal)
 footL.set_joint_center()
+footL.calculate_local_system()
+
 
 # pyplot.plot(range(footL.jointCenter[0].position.shape[0]),footL.jointCenter[1].position) 
+# pyplot.plot(range(footL.localSystem['i'].orientation.shape[0]),footL.localSystem['i'].orientation) 
 # pyplot.show()
 
 #Calf
@@ -63,8 +72,11 @@ rTW.filter()
 calfR=Calf(body,float(0.01*dict_groups['Antropometria']['DIAMETRO_RODILLA_DERECHA']),side='rigth')
 calfR.set_markers(rLFE,rLM,rTW)
 calfR.set_joint_center(footR.jointCenter[0])
+calfR.calculate_local_system()
+
 
 # pyplot.plot(range(calfR.jointCenter[0].position.shape[0]),calfR.jointCenter[0].position) 
+# pyplot.plot(range(calfR.localSystem['i'].orientation.shape[0]),calfR.localSystem['i'].orientation) 
 # pyplot.show()
 
 
@@ -78,8 +90,10 @@ lTW.filter()
 calfL=Calf(body,float(0.01*dict_groups['Antropometria']['DIAMETRO_RODILLA_IZQUIERDA']),side='left')
 calfL.set_markers(lLFE,lLM,lTW)
 calfL.set_joint_center(footL.jointCenter[0])
+calfL.calculate_local_system()
 
 # pyplot.plot(range(calfL.jointCenter[0].position.shape[0]),calfL.jointCenter[0].position) 
+# pyplot.plot(range(calfL.localSystem['i'].orientation.shape[0]),calfL.localSystem['i'].orientation) 
 # pyplot.show()
 
 #Thigh
@@ -89,10 +103,18 @@ rFW.filter()
 thighR=Thigh(body,side='rigth')
 thighR.set_markers(rFW)
 thighR.set_joint_center(pelvis.jointCenter[0],calfR.jointCenter[0])
+thighR.calculate_local_system()
+
+# pyplot.plot(range(thighR.localSystem['i'].orientation.shape[0]),thighR.localSystem['i'].orientation) 
+# pyplot.show()
 
     #left
 lFW=Marker(dict_markers['DATA']['POS']['l bar 1'],'l femoral wand',340)
 lFW.filter()
 thighL=Thigh(body,side='left')
-thighL.set_markers(rFW)
+thighL.set_markers(lFW)
 thighL.set_joint_center(pelvis.jointCenter[1],calfL.jointCenter[0])
+thighL.calculate_local_system()
+
+pyplot.plot(range(thighL.localSystem['i'].orientation.shape[0]),thighL.localSystem['i'].orientation) 
+pyplot.show()

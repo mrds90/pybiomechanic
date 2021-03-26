@@ -39,7 +39,7 @@ class Vector:
     def get_vector_from_three_points(cls,head1,head2,tail):
         try:
             if ((head1.shape[0]==3 and head2.shape[0]==3 and tail.shape[0]==3) or (head1.shape[1]==3 and head2.shape[1]==3 and tail.shape[1]==3)) and head1.shape==head2.shape==tail.shape :
-                vector=cross(head1-tail,head2-tail)
+                vector=np.cross(head1-tail,head2-tail)
                 return Vector.new_vector_from_np_array(vector)
             else:
                 raise ValueError
