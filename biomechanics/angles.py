@@ -14,5 +14,17 @@ class Angle():
         elif self.__jointCenter.label[0:len(self.__jointCenter.label)-2] == 'hip':
             alpha = np.rad2deg(np.arcsin((np.multiply(self.__jointCenter.coordinateSystem['e2'].orientation,self.__proximalSegment.localSystem['i'].orientation)).sum(axis=1))) #alpha in deg
         return alpha
+    def get_beta(self):
+        if self.__jointCenter.label[len(self.__jointCenter.label)-1:len(self.__jointCenter.label)] == 'r':
+            return np.rad2deg(np.arcsin((np.multiply(self.__proximalSegment.localSystem['k'].orientation,self.__distalSegment.localSystem['i'].orientation)).sum(axis=1))) #beta in deg
+        elif self.__jointCenter.label[len(self.__jointCenter.label)-1:len(self.__jointCenter.label)] == 'l':
+            return np.rad2deg(-np.arcsin((np.multiply(self.__proximalSegment.localSystem['k'].orientation,self.__distalSegment.localSystem['i'].orientation)).sum(axis=1))) #beta in deg
+    
+    def get_gamma(self):
+        if self.__jointCenter.label[len(self.__jointCenter.label)-1:len(self.__jointCenter.label)] == 'r':
+            return np.rad2deg(-np.arcsin((np.multiply(self.__jointCenter.coordinateSystem['e2'].orientation,self.__distalSegment.localSystem['k'].orientation)).sum(axis=1))) #gamma in deg
+        elif self.__jointCenter.label[len(self.__jointCenter.label)-1:len(self.__jointCenter.label)] == 'l':
+            return np.rad2deg(np.arcsin((np.multiply(self.__jointCenter.coordinateSystem['e2'].orientation,self.__distalSegment.localSystem['k'].orientation)).sum(axis=1))) #gamma in deg
+
 
         

@@ -128,21 +128,33 @@ thighL.calculate_local_system()
 
 thighR.jointCenter[0].angles=Angle(pelvis,thighR,thighR.jointCenter[0])
 thighR.jointCenter[0].angles.alpha=thighR.jointCenter[0].angles.get_alpha()
+thighR.jointCenter[0].angles.beta=thighR.jointCenter[0].angles.get_beta()
+thighR.jointCenter[0].angles.gamma=thighR.jointCenter[0].angles.get_gamma()
 
 thighL.jointCenter[0].angles=Angle(pelvis,thighL,thighL.jointCenter[0])
 thighL.jointCenter[0].angles.alpha=thighL.jointCenter[0].angles.get_alpha()
+thighL.jointCenter[0].angles.beta=thighL.jointCenter[0].angles.get_beta()
+thighL.jointCenter[0].angles.gamma=thighL.jointCenter[0].angles.get_gamma()
 
 calfR.jointCenter[0].angles=Angle(thighR,calfR,calfR.jointCenter[0])
 calfR.jointCenter[0].angles.alpha=calfR.jointCenter[0].angles.get_alpha()
+calfR.jointCenter[0].angles.beta=calfR.jointCenter[0].angles.get_beta()
+calfR.jointCenter[0].angles.gamma=calfR.jointCenter[0].angles.get_gamma()
 
 calfL.jointCenter[0].angles=Angle(thighL,calfL,calfL.jointCenter[0])
 calfL.jointCenter[0].angles.alpha=calfL.jointCenter[0].angles.get_alpha()
+calfL.jointCenter[0].angles.beta=calfL.jointCenter[0].angles.get_beta()
+calfL.jointCenter[0].angles.gamma=calfL.jointCenter[0].angles.get_gamma()
 
 footR.jointCenter[0].angles=Angle(calfR,footR,footR.jointCenter[0])
 footR.jointCenter[0].angles.alpha=footR.jointCenter[0].angles.get_alpha()
+footR.jointCenter[0].angles.beta=footR.jointCenter[0].angles.get_beta()
+footR.jointCenter[0].angles.gamma=footR.jointCenter[0].angles.get_gamma()
 
 footL.jointCenter[0].angles=Angle(calfL,footL,footL.jointCenter[0])
 footL.jointCenter[0].angles.alpha=footL.jointCenter[0].angles.get_alpha()
+footL.jointCenter[0].angles.beta=footL.jointCenter[0].angles.get_beta()
+footL.jointCenter[0].angles.gamma=footL.jointCenter[0].angles.get_gamma()
 
-# pyplot.plot(range(thighR.jointCenter[0].angles.alpha.shape[0]),thighR.jointCenter[0].angles.alpha) 
+# pyplot.plot(range(thighR.jointCenter[0].angles.beta.shape[0]),thighR.jointCenter[0].angles.beta) 
 # pyplot.show()
