@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import signal
-from .vectors import Vector
+from biomechanics import *
+# from .vectors import Vector
 
 
 class Point3D:
@@ -87,7 +88,8 @@ class JointCenter(Point3D):
         self.__vectors[order[2]-1]=self.third_vector(sign3)
         position=self.__set_position(self.__vectors[0],self.__vectors[1],self.__vectors[2],origin,coefU,coefV,coefW)
         Point3D.__init__(self,position,label,marker1.fs)
-    def first_vector(self,head,tail): #first to estimate, dosent mean that is u
+        self.__coordinateSystem={}
+    def first_vector(self,head:Point3D,tail:Point3D): #first to estimate, dosent mean that is u
         vector=head.position-tail.position
         return Vector.unitary_vector(Vector.new_vector_from_np_array(vector))
     def second_vector(self,marker1,marker2,marker3,sign=1): #second to estimate, dosent mean that is v,
@@ -109,9 +111,16 @@ class JointCenter(Point3D):
 
     def __set_position(self,u:Vector,v:Vector,w:Vector,origin,coefU:float,coefV:float,coefW:float):
         return origin.position+coefU*u.orientation+coefV*v.orientation+coefW*w.orientation
+    
+    def set_coordinate_system(self,vector:Vector,number):
+        self.__coordinateSystem['e'+str(number)]=vector
+        if 'e1' in self.__coordinateSystem and 'e3' in self.__coordinateSystem:
+            self.__coordinateSystem['e2']=Vector.unitary_vector(Vector.perpendicular_vector( self.__coordinateSystem['e1'], self.__coordinateSystem['e3']))
 
+        
     @property
     def uvw(self):
         return self.__vectors
-
-
+    @property
+    def coordinateSystem(self):
+        return self.__coordinateSystem

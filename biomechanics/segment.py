@@ -1,6 +1,6 @@
 import numpy as np
 from biomechanics import *
-from .position3d import JointCenter
+# from .position3d import JointCenter
 
 class Body:
     def __init__(self,mass:float,height):
@@ -131,6 +131,8 @@ class Pelvis(Segment):
         i=Vector.unitary_vector(Vector.get_vector_from_three_points(self.markers[1].position,self.markers[2].position,self.markers[0].position))
         j=Vector.perpendicular_vector(k,i)
         self.localSystem={'i':i,'j':j,'k':k}
+        self.jointCenter[0].set_coordinate_system(k,1)
+        self.jointCenter[1].set_coordinate_system(k,1)
 
 class Thigh(Segment):
     def __init__(self,body:Body,side='rigth'):
@@ -152,6 +154,8 @@ class Thigh(Segment):
             j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1].position,self.markers[0].position,self.jointCenter[0].position))
         k=Vector.perpendicular_vector(i,j)
         self.localSystem={'i':i,'j':j,'k':k}
+        self.jointCenter[0].set_coordinate_system(i,3)
+        self.jointCenter[1].set_coordinate_system(k,1)
 
 class Calf(Segment):
     def __init__(self,body:Body,kneeDiameter:float,side='rigth'): #kneeDiameter in meters
@@ -177,6 +181,8 @@ class Calf(Segment):
             j=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[1].position,self.markers[0].position,self.jointCenter[0].position))
         k=Vector.perpendicular_vector(i,j)
         self.localSystem={'i':i,'j':j,'k':k}
+        self.jointCenter[0].set_coordinate_system(i,3)
+        self.jointCenter[1].set_coordinate_system(k,1)
 
 class Foot(Segment):
     def __init__(self,body:Body,footLength:float,footWidth:float,malleolusHigh:float,malleolusWidth:float,side='rigth'):
@@ -200,13 +206,14 @@ class Foot(Segment):
 
         ankle=JointCenter('ankle_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,3,2],coefU=coefUAnkle,coefV=coefVAnkle,coefW=coefWAnkle)
         toe=JointCenter('toe_'+self.__side[0],self.markers[0],self.markers[1],self.markers[2],order=[1,3,2],coefU=coefUToe,coefV=coefVToe,coefW=coefWToe)
-
         Segment.set_joint_center(self,ankle,toe)
+
     def calculate_local_system(self):
         i=Vector.unitary_vector(Vector.get_vector_from_two_points(self.markers[1].position,self.jointCenter[1].position))
         k=Vector.unitary_vector(Vector.get_vector_from_three_points(self.jointCenter[0].position,self.jointCenter[1].position,self.markers[1].position))
         j=Vector.perpendicular_vector(k,i)
-        self.localSystem={'i':i,'j':j,'k':k}        
+        self.localSystem={'i':i,'j':j,'k':k}    
+        self.jointCenter[0].set_coordinate_system(i,3)
     
 
 

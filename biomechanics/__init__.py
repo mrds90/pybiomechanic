@@ -11,3 +11,5 @@ from .segment import Thigh
 from .segment import Calf
 from .segment import Foot
 
+from .angles import Angle
+

@@ -9,6 +9,10 @@ dict_markers = c3d.get_dict_markers(itf)
 dict_groups = c3d.get_dict_groups(itf)
 ret = c3d.close_c3d(itf)
 body=Body(float(dict_groups['Antropometria']['PESO'])  ,float(dict_groups['Antropometria']['ALTURA']))
+
+
+
+
 #Pelvis
 pelvis=Pelvis(body,0.01*float(dict_groups['Antropometria']['LONGITUD_ASIS']))
 sacrum=Marker(dict_markers['DATA']['POS']['sacrum'],'sacrum',340)
@@ -42,6 +46,7 @@ footR.calculate_local_system()
 
 # pyplot.plot(range(footR.jointCenter[0].position.shape[0]),footR.jointCenter[1].position) 
 # pyplot.plot(range(footR.localSystem['i'].orientation.shape[0]),footR.localSystem['i'].orientation) 
+# pyplot.plot(range(footR.jointCenter[0].coordinateSystem['e2'].orientation.shape[0]),footR.jointCenter[0].coordinateSystem['e2'].orientation) 
 # pyplot.show()
 
     #left
@@ -116,5 +121,28 @@ thighL.set_markers(lFW)
 thighL.set_joint_center(pelvis.jointCenter[1],calfL.jointCenter[0])
 thighL.calculate_local_system()
 
-pyplot.plot(range(thighL.localSystem['i'].orientation.shape[0]),thighL.localSystem['i'].orientation) 
-pyplot.show()
+# pyplot.plot(range(thighL.localSystem['i'].orientation.shape[0]),thighL.localSystem['i'].orientation) 
+# pyplot.show()
+
+# pyplot.plot(range(thighL.jointCenter[1].coordinateSystem['e2'].orientation.shape[0]),thighL.jointCenter[1].coordinateSystem['e2'].orientation)
+
+thighR.jointCenter[0].angles=Angle(pelvis,thighR,thighR.jointCenter[0])
+thighR.jointCenter[0].angles.alpha=thighR.jointCenter[0].angles.get_alpha()
+
+thighL.jointCenter[0].angles=Angle(pelvis,thighL,thighL.jointCenter[0])
+thighL.jointCenter[0].angles.alpha=thighL.jointCenter[0].angles.get_alpha()
+
+calfR.jointCenter[0].angles=Angle(thighR,calfR,calfR.jointCenter[0])
+calfR.jointCenter[0].angles.alpha=calfR.jointCenter[0].angles.get_alpha()
+
+calfL.jointCenter[0].angles=Angle(thighL,calfL,calfL.jointCenter[0])
+calfL.jointCenter[0].angles.alpha=calfL.jointCenter[0].angles.get_alpha()
+
+footR.jointCenter[0].angles=Angle(calfR,footR,footR.jointCenter[0])
+footR.jointCenter[0].angles.alpha=footR.jointCenter[0].angles.get_alpha()
+
+footL.jointCenter[0].angles=Angle(calfL,footL,footL.jointCenter[0])
+footL.jointCenter[0].angles.alpha=footL.jointCenter[0].angles.get_alpha()
+
+# pyplot.plot(range(thighR.jointCenter[0].angles.alpha.shape[0]),thighR.jointCenter[0].angles.alpha) 
+# pyplot.show()
