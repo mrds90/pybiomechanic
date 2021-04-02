@@ -10,6 +10,13 @@ dict_groups = c3d.get_dict_groups(itf)
 ret = c3d.close_c3d(itf)
 body=Body(float(dict_groups['Antropometria']['PESO'])  ,float(dict_groups['Antropometria']['ALTURA']))
 
+# Define event dict
+event={}
+for i in range(dict_groups['EVENT']['TIMES'][:,1].shape[0]):
+    key=dict_groups['EVENT']['LABELS'][i]
+    if key in event.keys():
+        key=key+'2'
+    event[key]=dict_groups['EVENT']['TIMES'][i,1]
 
 
 
@@ -158,3 +165,9 @@ footL.jointCenter[0].angles.gamma=footL.jointCenter[0].angles.get_gamma()
 
 # pyplot.plot(range(thighR.jointCenter[0].angles.beta.shape[0]),thighR.jointCenter[0].angles.beta) 
 # pyplot.show()
+rightGait=Gait(event['RHS'],event['RHS2'],event['RTO'],340,type='time')
+leftGait=Gait(event['LHS'],event['LHS2'],event['LTO'],340,type='time')
+
+alpha=rightGait.normalize(footL.jointCenter[0].angles.alpha)
+pyplot.plot(range(alpha.shape[0]),alpha) 
+pyplot.show()
